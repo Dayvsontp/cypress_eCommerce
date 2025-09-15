@@ -3,6 +3,7 @@ const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const webpack = require('@cypress/webpack-preprocessor');
 
 module.exports = defineConfig({
+  projectId: '8wm3df',
   e2e: {
      e2e: {
     baseUrl: 'http://www.automationpractice.pl/index.php?',

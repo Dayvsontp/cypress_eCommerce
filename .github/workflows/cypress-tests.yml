@@ -1,17 +1,24 @@
-name: Cypress Tests  
-
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  cypress-electron-tests:
+  test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Get code
-        uses: actions/checkout@v5.0.0
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Install Cypress binary
+        run: npx cypress install
 
       - name: Run E2E tests
-        run: npx cypress run || chmod +x ./node_modules/.bin/cypress && npx cypress run
-
+        run: npx cypress run

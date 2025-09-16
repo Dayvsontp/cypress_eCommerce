@@ -53,7 +53,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6.5.0
         with:
-          install-command: npm install && npx cypress install
           browser: chrome
           record: true
           group: UI Chrome
@@ -74,7 +73,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6.5.0
         with:
-          install-command: npm install && npx cypress install
           browser: firefox
           record: true
           group: UI Firefox

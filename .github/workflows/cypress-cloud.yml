@@ -66,18 +66,4 @@ jobs:
           CYPRESS_noSandbox: "true"
 
 
-#           setupNodeEvents(on, config) {
-#   if (config.env.noSandbox === "true") {
-#     config.browsers = config.browsers.map((browser) => {
-#       if (browser.name === 'chrome' || browser.name === 'chromium') {
-#         return {
-#           ...browser,
-#           customLaunchArgs: ['--no-sandbox']
-#         }
-#       }
-#       return browser
-#     })
-#   }
- 
-#   return config
-# }
+

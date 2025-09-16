@@ -1,6 +1,6 @@
 name: Cypress Cloud
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       spec:
@@ -32,7 +32,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6.5.0
         with:
-          install-command: npm install
+          ci-build-id: ${{ github.run_id }}
           browser: electron
           record: true
           parallel: true
@@ -41,9 +41,10 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: fe84576b-e2e2-4da4-9ae4-16bf6fd63e6a
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
   cypress-e2e-chrome:
-    needs: cypress-e2e-electron
     runs-on: ubuntu-latest
+    needs: cypress-e2e-electron
     container:
       image: cypress/browsers:node18.12.0-chrome107
       options: --user 1001
@@ -54,6 +55,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6.5.0
         with:
+          ci-build-id: ${{ github.run_id }}
           browser: chrome
           record: true
           parallel: true
@@ -62,4 +64,3 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: fe84576b-e2e2-4da4-9ae4-16bf6fd63e6a
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  

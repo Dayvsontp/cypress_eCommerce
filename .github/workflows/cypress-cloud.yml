@@ -42,25 +42,42 @@ jobs:
           CYPRESS_RECORD_KEY: fe84576b-e2e2-4da4-9ae4-16bf6fd63e6a
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-# ---
-#   cypress-e2e-chrome:
-#     runs-on: ubuntu-latest
-#     needs: cypress-e2e-electron
-#     container:
-#       image: cypress/browsers:node18.12.0-chrome107
-#       options: --user 1001
-#     steps:
-#       - name: Get code
-#         uses: actions/checkout@v4
+---
+  cypress-e2e-chrome:
+    runs-on: ubuntu-latest
+    needs: cypress-e2e-electron
+    container:
+      image: cypress/browsers:node18.12.0-chrome107
+      options: --user 1001
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
         
-#       - name: Cypress run
-#         uses: cypress-io/github-action@v6.5.0
-#         with:
-#           ci-build-id: ${{ github.run_id }}
-#           browser: chrome
-#           record: true
-#           group: UI Chrome
-#           spec: ${{ github.event.inputs.spec }}
-#         env:
-#           CYPRESS_RECORD_KEY: fe84576b-e2e2-4da4-9ae4-16bf6fd63e6a
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     - name: Cypress run
+       uses: cypress-io/github-action@v6.5.0
+        with:
+          browser: chrome
+          record: true
+          group: UI Chrome
+          spec: ${{ github.event.inputs.spec }}      
+        env:
+          CYPRESS_RECORD_KEY: fe84576b-e2e2-4da4-9ae4-16bf6fd63e6a
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CYPRESS_noSandbox: "true"
+
+
+#           setupNodeEvents(on, config) {
+#   if (config.env.noSandbox === "true") {
+#     config.browsers = config.browsers.map((browser) => {
+#       if (browser.name === 'chrome' || browser.name === 'chromium') {
+#         return {
+#           ...browser,
+#           customLaunchArgs: ['--no-sandbox']
+#         }
+#       }
+#       return browser
+#     })
+#   }
+ 
+#   return config
+# }

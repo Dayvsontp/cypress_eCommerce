@@ -8,37 +8,60 @@ on:
         default: cypress/e2e/*
 
 jobs:
-  cypress-e2e-sequential:
+  cypress-e2e-electron:
     runs-on: ubuntu-latest
     container:
-      image: cypress/browsers:node18.12.0-chrome103-ff107
+      image: cypress/browsers:node18.12.0-chrome107
     steps:
       - name: Get code
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Cypress run on Electron
-        uses: cypress-io/github-action@v5.0.8
+      # --- NOVO PASSO ---
+      - name: Set cache folder permissions
+        run: sudo chown -R $(whoami) $(npm get cache)
+      # --- FIM DO NOVO PASSO ---
+
+      - name: Install Cypress binary
+        run: npx cypress install
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6.5.0
         with:
-          ci-build-id: ${{ github.run_id }}
           browser: electron
           record: true
-          parallel: false
+          parallel: true
           group: UI Electron
           spec: ${{ github.event.inputs.spec }}
         env:
           CYPRESS_RECORD_KEY: fe84576b-e2e2-4da4-9ae4-16bf6fd63e6a
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cypress run on Chrome
-        uses: cypress-io/github-action@v5.0.8
+---
+  cypress-e2e-chrome:
+    runs-on: ubuntu-latest
+    needs: cypress-e2e-electron
+    container:
+      image: cypress/browsers:node18.12.0-chrome107
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+        
+      - name: Cypress run
+        uses: cypress-io/github-action@v6.5.0
         with:
           ci-build-id: ${{ github.run_id }}
           browser: chrome
           record: true
-          parallel: false
+          parallel: true
           group: UI Chrome
           spec: ${{ github.event.inputs.spec }}
         env:

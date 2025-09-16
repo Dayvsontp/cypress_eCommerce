@@ -1,3 +1,5 @@
+name: Cypress Test
+
 on: 
   workflow_dispatch:
     inputs:

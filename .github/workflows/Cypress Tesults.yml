@@ -4,19 +4,24 @@ on:
   workflow_dispatch:
     inputs:
       cli:
-        description: Run by cypress command line
+        description: Run by cypress node command
         default: node runner.js
 
 jobs:
-  test:
+  cypress-e2e-electron:
     runs-on: ubuntu-latest
     container:
       image: cypress/browsers:node18.12.0-chrome107
       options: --user 1001
-
     steps:
-      - name: Checkout repo
+      - name: Get code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -24,5 +29,12 @@ jobs:
       - name: Install Cypress binary
         run: npx cypress install
 
-      - name: Run E2E tests
-        run: ${{ github.event.inputs.cli }}
+      - name: Cypress run
+        uses: cypress-io/github-action@v6.5.0
+        with:
+          ci-build-id: ${{ github.run_id }}
+          browser: electron
+          record: true
+          parallel: true
+          group: UI Electron
+          spec: ${{ github.event.inputs.spec }}

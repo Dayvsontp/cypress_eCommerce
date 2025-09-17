@@ -26,6 +26,9 @@ jobs:
       - name: Passo 1 sincronizando o npm
         run: npm install
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Install Cypress binary
         run: npx cypress install
 
